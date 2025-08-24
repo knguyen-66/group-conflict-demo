@@ -1,4 +1,4 @@
-from group.group import GroupResource, RemoteGroup, LocalGroup, GroupHandler
+from group.group import RemoteGroup, GroupHandler
 
 remote_groups: list[RemoteGroup] = [
     RemoteGroup(
@@ -20,12 +20,15 @@ remote_groups: list[RemoteGroup] = [
 
 
 def main():
-    handler = GroupHandler(remote_groups=remote_groups, local_groups=[])
+    handler = GroupHandler(local_groups=[])
     handler.show_data(help_text="init")
-    handler.sync()
-    handler.show_data(help_text="after sync")
-    handler.add_local_resources(group_id=3, resource_ids=[6, 7])
+    handler.sync(remote_groups)
+    handler.show_data(help_text="after first sync")
+    handler.remove_local_resources(group_id=1, resource_ids=[1, 2])
+    handler.remove_local_resources(group_id=3, resource_ids=[6, 5])  # remove unknown 6
     handler.show_data(help_text="after add local resources")
+    handler.sync(remote_groups)
+    handler.show_data(help_text="after add sync")
 
 
 if __name__ == "__main__":
